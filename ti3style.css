@@ -1,0 +1,87 @@
+/** {
+    border: 1px dashed #ffffff;
+}*/
+
+body {
+    background-color: #0f0f0f;
+    color: #f0f0f0;
+}
+
+#form\_div {
+    width:300px;
+    background-color: #f4f4f4;
+    color: #4f4f4f;
+    border-radius: 0px 5px 5px 5px;
+    padding: 5px;
+    clear:both;
+}
+
+#lock\_div {
+    width:300px;
+    background-color: #f4f4f4;
+    color: #4f4f4f;
+    border-radius: 5px 5px 5px 5px;
+    padding: 5px;
+    clear:both;
+    margin: 0px 0px 5px 0px;
+}
+
+#frame\_div {
+    float:left;
+    width: 330px;
+    /*position: fixed;
+    z-index: 999999;*/
+}
+
+#map\_div {
+    float: left;
+    position: relative;
+    /*left: 330px;
+    z-index: 0;*/
+}
+
+#tab\_inactive {
+    width:75px;
+    height:20px;
+    background-color:#8f8f8f;
+    color:#f8f8f8;
+    border-radius: 5px 5px 0px 0px;
+    text-align:center;
+    padding:0px;
+    border:0px;
+    margin:0px;
+    float:left
+}
+
+#tab\_active {
+    width:75px;
+    height:20px;
+    background-color:#f4f4f4;
+    color:#4f4f4f;
+    border-radius: 5px 5px 0px 0px;
+    text-align:center;
+    padding:0px;
+    border:0px;
+    margin:0px;
+    float:left
+}
+
+a {
+    color: #8f8f8f;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #8f8f8f;
+    text-decoration: underline;  
+} 
+
+#tab\_inactive a {
+    color: #f8f8f8;
+    text-decoration: none;
+}
+
+#tab\_inactive a:hover {
+    color: #f8f8f8;
+    text-decoration: underline;  
+} 
