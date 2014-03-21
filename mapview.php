@@ -42,12 +42,12 @@ $deleted = false;
 	<?php
 	if ($_SERVER["REQUEST_METHOD"] == "POST")
 	{
-		$map = unserialize(file_get_contents('map_' 
+		$map = unserialize(file_get_contents('maps/map_' 
 			 . htmlspecialchars ($_POST['id'])));
 		$lock_case = $map->process_form($_POST);
 		if ($lock_case == 2 || $lock_case == 5)
 		{
-			file_put_contents('map_' . htmlspecialchars($_POST['id']),
+			file_put_contents('maps/map_' . htmlspecialchars($_POST['id']),
 				serialize($map));
 		}
 	}
@@ -78,7 +78,7 @@ $deleted = false;
 						count($map_list));
 				}
 				
-				file_put_contents('map_' . count($map_list), serialize($map));
+				file_put_contents('maps/map_' . count($map_list), serialize($map));
 				$map_list[] = array(
 					'Name' => htmlspecialchars($_GET['name']),
 					'Deleted' => false
@@ -90,7 +90,7 @@ $deleted = false;
 		elseif ($_GET['mode'] == 'load')
 		{
 			/*$input_ok = true;*/
-			$map = unserialize(file_get_contents('map_' . 
+			$map = unserialize(file_get_contents('maps/map_' . 
 				htmlspecialchars($_GET['id'])));
 			if (!array_key_exists('sid', $_GET))
 			{
