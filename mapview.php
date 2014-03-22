@@ -25,6 +25,24 @@
 ini_set('display_errors', 'On');
 include "ti3classes.php"; 
 $deleted = false;
+
+$page_title = 'TI3Web Map Viewer';
+if ($_SERVER["REQUEST_METHOD"] == "POST")
+{
+    if (array_key_exists('id',$_POST)) 
+    {
+        $map_list = unserialize(file_get_contents('map_list'));
+        $page_title = $map_list[$_POST['id']]['Name'] . ' - '. $page_title;
+    }
+} 
+else if ($_SERVER["REQUEST_METHOD"] == "GET") 
+{
+    if (array_key_exists('id',$_GET)) 
+    {
+        $map_list = unserialize(file_get_contents('map_list'));
+        $page_title = $map_list[$_POST['id']]['Name'] . ' - '. $page_title;
+    }
+}
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
@@ -33,7 +51,7 @@ $deleted = false;
 
 <head>
 	<link type="text/css" rel="stylesheet" href="ti3style.css"/>
-	<title>TI3Web Map Viewer</title>
+	<title><?php echo $page_title; ?></title>
 	<meta http-equiv="content-type" content="text/html;charset=utf-8" />
 	<meta name="generator" content="Geany 1.23.1" />
 </head>
@@ -106,9 +124,12 @@ $deleted = false;
 			}
 			$map_list[htmlspecialchars($_GET['id'])]['Deleted'] = true;
 			file_put_contents('map_list', serialize($map_list));
-			echo 'The map was removed from the list of maps. It is still '
+			echo '<div id="deleted_div">'
+                 .'The map was removed from the list of maps. It is still '
 				 . 'stored on the server. If you would like to restore the '
-				 . 'map please contact Sunchaser.';
+				 . 'map please contact ' . $ti3web_admin . '. '
+                 . '<a href=' . $ti3web_url . 'index.php>'
+                 . 'Return to map selection.</a>';
 			$deleted = true;
 		}
 		if (!$deleted)
@@ -126,12 +147,15 @@ $deleted = false;
 	?>
 	<div id="frame_div">
 		<?php
-			echo '              ';
+        if (!$deleted)
+        {	
+            echo '              ';
 			$map->lock_form($lock_case);
 			if (!$deleted && $lock_case == 2)
 			{
 				echo '              ' . $map->form() . PHP_EOL;
 			}
+        }
 		?>
 	</div>
 			<?php 

@@ -34,7 +34,9 @@ $setup_help   = unserialize(file_get_contents($ti3_path . 'setup_help'));
 
 $lock_timeout = 300; /* Time to map lock time out in seconds. */
 
-$url = 'http://ti3pbf.com/ti3web/';
+$ti3web_url = 'http://ti3pbf.com/ti3web/';
+$ti3web_version = '0.1.1';
+$ti3web_admin = 'Sunchaser';
 
 $default_prev = array(
 	'x' => 0,
@@ -670,7 +672,7 @@ class TI3Map
 	public function lock_form($case)
 	{
 		global $lock_timeout;
-		global $url;
+		global $ti3web_url;
 		
 		$lock_time = hexdec(substr($this->lock_sid,0,8));
 		date_default_timezone_set('UTC');
@@ -679,8 +681,8 @@ class TI3Map
 		$php_self = htmlspecialchars($_SERVER["PHP_SELF"]);
 		
 		echo '<div id="lock_div">Forum BBCode: [mview]' . $this->file_id . '[/mview]<br>';
-		echo 'Direct Link: <a href="' . $url . 'mapview.php?'
-			 . 'id=' . $this->file_id . '&mode=load">' . $url
+		echo 'Direct Link: <a href="' . $ti3web_url . 'mapview.php?'
+			 . 'id=' . $this->file_id . '&mode=load">' . $ti3web_url
 			 . 'mapview.php?id=' . $this->file_id . '&mode=load</a><br><br>' . PHP_EOL;
 		
 		switch ($case)

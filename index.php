@@ -30,19 +30,20 @@ ini_set('display_errors', 'On');
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 
 <head>
+	<link type="text/css" rel="stylesheet" href="ti3style.css"/>
     <title>TI3Web Map Viewer</title>
     <meta http-equiv="content-type" content="text/html;charset=utf-8" />
     <meta name="generator" content="Geany 1.23.1" />
 </head>
 
 <body>
-    <form action="mapview.php" method="get" id="map">
-        <input type="radio" name="mode" value="new" checked> New map: 
-        <input type="text" name="name"><br>
+    <div id="index_div"><form action="mapview.php" method="get" id="map">
+        <input id="mode_new" type="radio" name="mode" value="new" checked> 
+        New map: <input type="text" name="name" onkeydown="this.form.mode_new.checked = true;"><br>
         <?php
             $setup_help = unserialize(file_get_contents('setup_help'));
-            echo '<input type="checkbox" name="setup" value="yes"> ';
-            echo 'Setup patterns: <select name="setup_id" form="map">' 
+            echo '<input id="setup_help" type="checkbox" name="setup" value="yes"> ';
+            echo 'Setup patterns: <select name="setup_id" form="map" onclick="this.form.setup_help.checked = true;">' 
                  . PHP_EOL;
             foreach ($setup_help as $k => $dump)
             {
@@ -53,7 +54,9 @@ ini_set('display_errors', 'On');
             echo '</select><br>' . PHP_EOL;
             if (file_exists('map_list'))
             {
-                echo 'Saved maps: <select name="id" form="map">' . PHP_EOL;
+                echo 'Saved maps: <select name="id" form="map" '
+                     . 'onclick="this.form.mode_load.checked = true;">' 
+                     . PHP_EOL;
                 $map_list = unserialize(file_get_contents('map_list'));
                 for ($k = 0; $k < count($map_list); $k++)
                 {
@@ -66,15 +69,17 @@ ini_set('display_errors', 'On');
                     }
                 }
                 echo '</select><br>' . PHP_EOL;
-                echo '<input type="radio" name="mode" value="load"> ';
+                echo '<input id="mode_load" type="radio" name="mode" '
+                     . 'value="load"> ';
                 echo 'Load map' . PHP_EOL;
-                echo '<input type="radio" name="mode" value="delete"> ';
+                echo '<input id="mode_delete" type="radio" name="mode" '
+                     . 'value="delete"> ';
                 echo 'Delete map' . PHP_EOL;
             }
         ?><br>
         <input type="submit" value="Submit">
         <!-- <input type="hidden" name="tab" value="0"> -->
-    </form> 
+    </form></div>
 </body>
 
 </html>
