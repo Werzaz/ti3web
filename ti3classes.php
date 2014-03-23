@@ -82,13 +82,22 @@ class TI3Map
 	/*private $lock_sid = false;*/
 	public $lock_sid = false;
 
-	public function __construct($name, $id, $setup=false)
+	public function __construct($name, $id, $setup=false, $owner=false)
 	{
 		global $setup_help;
 		
 		$this->name = $name;
 		$this->file_id = $id;
 		
+        if (!$owner || $owner === '') 
+        {
+            $this->owner = 'Anonymous';
+        }
+        else
+        {
+            $this->owner = $owner;
+        }
+
 		if ($setup !== false)
 		{
 			foreach ($setup_help[$setup]['Locations'] as $k => $loc_list)

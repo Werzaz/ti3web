@@ -27,7 +27,7 @@ include "ti3classes.php";
 $deleted = false;
 
 $page_title = 'TI3Web Map Viewer';
-if ($_SERVER["REQUEST_METHOD"] == "POST")
+if ($_SERVER['REQUEST_METHOD'] == 'POST')
 {
     if (array_key_exists('id',$_POST)) 
     {
@@ -35,12 +35,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
         $page_title = $map_list[$_POST['id']]['Name'] . ' - '. $page_title;
     }
 } 
-else if ($_SERVER["REQUEST_METHOD"] == "GET") 
+else if ($_SERVER['REQUEST_METHOD'] == 'GET') 
 {
-    if (array_key_exists('id',$_GET)) 
+    if (array_key_exists('id',$_GET) && $_GET['mode'] !== 'new') 
     {
         $map_list = unserialize(file_get_contents('map_list'));
-        $page_title = $map_list[$_POST['id']]['Name'] . ' - '. $page_title;
+        $page_title = $map_list[$_GET['id']]['Name'] . ' - '. $page_title;
     }
 }
 ?>
@@ -71,7 +71,7 @@ else if ($_SERVER["REQUEST_METHOD"] == "GET")
 	}
 	elseif ($_SERVER["REQUEST_METHOD"] == "GET")
 	{
-		if ($_GET['mode'] == 'new')
+        if ($_GET['mode'] == 'new')
 		{
 			if ($_GET['name'] != '')
 			{
@@ -88,18 +88,26 @@ else if ($_SERVER["REQUEST_METHOD"] == "GET")
 				{
 					$map = new TI3Map(htmlspecialchars($_GET['name']), 
 						count($map_list), $setup=htmlspecialchars(
-							$_GET['setup_id']));
+                            $_GET['setup_id']), $owner=htmlspecialchars(
+                                $_GET['owner']));
 				}
 				else
 				{
 					$map = new TI3Map(htmlspecialchars($_GET['name']), 
-						count($map_list));
+                        count($map_list), $owner=htmlspecialchars(
+                            $_GET['owner']));
 				}
 				
 				file_put_contents('maps/map_' . count($map_list), serialize($map));
+                if ($_GET['owner'] === '')
+                {
+                    $_GET['owner'] = 'Anonymous';
+                }
+
 				$map_list[] = array(
 					'Name' => htmlspecialchars($_GET['name']),
-					'Deleted' => false
+					'Deleted' => false,
+                    'Owner' => htmlspecialchars($_GET['owner'])
 				);
 				file_put_contents('map_list', serialize($map_list));
 				$lock_case = $map->check_lock(false);

@@ -37,7 +37,11 @@ ini_set('display_errors', 'On');
 </head>
 
 <body>
-    <div id="index_div"><form action="mapview.php" method="get" id="map">
+    <div id="index_div">
+    <h2 style="text-align:center;">TI3Web Map Viewer</h2>
+    <form action="mapview.php" method="get" id="map">
+    Username:
+    <input type="text" name="owner"><br>
         <input id="mode_new" type="radio" name="mode" value="new" checked> 
         New map: <input type="text" name="name" onkeydown="this.form.mode_new.checked = true;"><br>
         <?php
