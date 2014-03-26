@@ -105,16 +105,16 @@ class TI3Map
 				foreach($loc_list as $loc)
 				{
 					$xy = explode(',', $loc);
-					$this->add_system($k, $xy[0], $xy[1]);
+					$this->add_system($k, $xy[0], $xy[1], $label=$loc);
 				}
 			}
 		}
 	}
 
-	public function add_system($key, $gal_x, $gal_y)
+	public function add_system($key, $gal_x, $gal_y, $label=false)
 	{
 		$loc = $gal_x . ',' . $gal_y;
-		$this->system_list[$loc] = new TI3System($key, $gal_x, $gal_y);
+		$this->system_list[$loc] = new TI3System($key, $gal_x, $gal_y, $label=$label);
 	}
 
 	public function form()
@@ -414,11 +414,16 @@ class TI3Map
 			break;
 			
 			case 2:
-				if (array_key_exists('done', $post)) 
+				if (array_key_exists('done', $post))
 				{
 					$this->unlock_map();
 					return 5; 
 				}
+                else if (array_key_exists('discard', $post)) 
+                {
+					$this->unlock_map();
+					return 13; 
+                }
 				
 				/* 
 				 * If map was already locked and you keep editing,
@@ -429,7 +434,7 @@ class TI3Map
 			
 			case 5:
 				$this->unlock_map();
-				return 5;
+				return 13;
 			break;
 			
 			default:
@@ -513,10 +518,11 @@ class TI3Map
 			{
 				$this->lock_map();
 			}
-			elseif (array_key_exists('done', $post))
+			/*elseif (array_key_exists('done', $post) &&
+                    array_key_exists('discard', $post))
 			{
 				$this->unlock_map();
-			}
+            }*/
 		}
 		elseif ($this->prev['tab'] == 1)
 		{
@@ -643,12 +649,15 @@ class TI3Map
 		 * +1 if the map is not locked
 		 * +2 if you are currently editing
 		 * +4 if the map has just been unlocked
-		 *
+		 * +8 if the map should not be saved
+		 * 
 		 * The cases that can occur are:
-		 * 0: map is locked and you are not editing
-		 * 1: map is not locked and you are not editing
-		 * 2: map is locked and you are editing
-		 * 5: map has just been unlocked and you are not editing
+		 * 0:  map is locked and you are not editing
+		 * 1:  map is not locked and you are not editing
+		 * 2:  map is locked and you are editing
+		 * 5:  map has just been unlocked and you are not editing
+		 * 13: map has just been unlocked, you are not editing
+		 *     and it should not be saved
 		 */
 		global $lock_timeout;
 		
@@ -709,6 +718,7 @@ class TI3Map
 			
 			case 1:
 			case 5:
+            case 13:
 				echo 'Nobody is editing this map. '
 					 . 'Click the button to begin editing. ' . PHP_EOL
 					 . '<form method="post" action="' . $php_self . '" id="lock">' . PHP_EOL
@@ -723,12 +733,13 @@ class TI3Map
 				echo 'You are editing this map. It is locked until '
 					 . $locked_until
 					 . '. Please do not close this window because this will '
-					 . 'leave the lock in place. Click the button when you are done. ' . PHP_EOL
+					 . 'leave the lock in place. Please click a button when you are done. ' . PHP_EOL
 					 . '<form method="post" action="' . $php_self . '" id="lock">' . PHP_EOL
 					 . '<input type="hidden" value="' . $this->file_id . '" name="id">' . PHP_EOL
 					 . '<input type="hidden" value="' . $this->lock_sid . '" name="sid">' . PHP_EOL
 					 /*. '<input type="hidden" value="0" name="tab">' . PHP_EOL*/
-					 . '<input type="submit" value="Done" name="done"></form></div>' 
+					 . '<input type="submit" value="Save" name="done">' . PHP_EOL
+                     . '<input type="submit" value="Discard changes" name="discard"></form></div>'
 					 . PHP_EOL;
 			break;
 		}
@@ -749,7 +760,7 @@ class TI3System
 	public $wormholes = array();
 	private $label = false;
 	
-	public function __construct($key, $gal_x, $gal_y)
+	public function __construct($key, $gal_x, $gal_y, $label=false)
 	{
 		global $systems;
 		
@@ -757,6 +768,7 @@ class TI3System
 		$this->gal_y = $gal_y;
 		$this->name = $systems[$key]['Name'];
 		$this->imgfile = $systems[$key]['File'];
+        $this->label = $label;
 		
 		if (array_key_exists('Planets', $systems[$key]))
 		{ 
@@ -770,6 +782,11 @@ class TI3System
 			$this->wormholes = $systems[$key]['Wormholes'];
 		}
 	}
+
+    public function set_label($label)
+    {
+        $this->label = $label;
+    }
 	
 	public function add_token($key, $rel_x, $rel_y, $from_string=false)
 	{
@@ -856,11 +873,26 @@ class TI3System
 				$tmp[] = 'Wormholes ' . implode(', ', $this->wormholes);
 			}
 		}
-		$output[] = '<img style="position:absolute; top:' . $pos['y'] 
+		/*$output[] = '<img style="position:absolute; top:' . $pos['y'] 
 				  . 'px; left:' . $pos['x'] . 'px; z-index:' . $z 
 				  . '" src="' . $ti3_path . 'images/'. $size . '/' 
 				  . $this->imgfile . '" title="' 
+				  . implode('&#10', $tmp) . '">';*/
+		$output[] = '<div class="system_div" style="top:' . $pos['y'] 
+				  . 'px; left:' . $pos['x'] . 'px; z-index:' . $z 
+				  . '; background-image:url(' . $ti3_path . 'images/'. $size . '/' 
+				  . $this->imgfile . '); height:' . 3.76*$size 
+                  . 'px; width:' . 4.32*$size . 'px; line-height:' . 3.76*$size 
+                  . 'px;" title="' 
 				  . implode('&#10', $tmp) . '">';
+        if ($this->label !== false)
+        {
+            $output[] = '<span class="system_label" style="z-index:' . $z 
+                        . '; font-size:' . 0.05*$size . 'em">' . $this->label . '</span>';
+            $z++;
+        }
+        $output[] = '</div>';
+
 		$z++;
 		
 		foreach ($this->tokens as $token)

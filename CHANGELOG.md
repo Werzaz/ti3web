@@ -1,10 +1,15 @@
 # Changelog
 
 ### Version 0.1.1
+##### Revision 7 (2014-03-26)
+
+* Change are not saved automatically any longer. There are now button to save or discard changes.
+* Labels for systems are now supported. Currently this is only used for the setup help tiles. 
+
 ##### Revision 6 (2014-03-23)
 
-* Maps can now be assigned a username (which has no further effect for now)
-* Added admin page for easy renaming and undeleting (not working yet)
+* Maps can now be assigned a username (which has no further effect for
+* now) Added admin page for easy renaming and undeleting (not working yet)
 
 
 ##### Revision 5 (2014-03-22)
@@ -16,3 +21,4 @@
 ##### Revision 3 (2014-03-21)
 
 * Added several onclick events for improved ease of use 
+* The app now only remembers your previous selections until you are done with editing.

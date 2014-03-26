@@ -60,14 +60,38 @@ else if ($_SERVER['REQUEST_METHOD'] == 'GET')
 	<?php
 	if ($_SERVER["REQUEST_METHOD"] == "POST")
 	{
-		$map = unserialize(file_get_contents('maps/map_' 
-			 . htmlspecialchars ($_POST['id'])));
+        if (file_exists('maps/map_' . htmlspecialchars($_POST['id']) 
+                        . '_tmp'))
+        {
+            $map = unserialize(file_get_contents('maps/map_' .
+                htmlspecialchars($_POST['id']) . '_tmp'));
+        }
+        else 
+        {
+            $map = unserialize(file_get_contents('maps/map_' . 
+                htmlspecialchars($_POST['id'])));
+        }
+
 		$lock_case = $map->process_form($_POST);
-		if ($lock_case == 2 || $lock_case == 5)
+
+        if ($lock_case == 2)
 		{
-			file_put_contents('maps/map_' . htmlspecialchars($_POST['id']),
-				serialize($map));
+			file_put_contents('maps/map_' . htmlspecialchars($_POST['id'])
+                              . '_tmp', serialize($map));
 		}
+        else if ($lock_case == 5)
+        {
+            file_put_contents('maps/map_' . htmlspecialchars($_POST['id']),
+                              serialize($map));
+            unlink('maps/map_' . htmlspecialchars($_POST['id']) . '_tmp');
+        }   
+        else if ($lock_case == 13)
+        {
+            $map = unserialize(file_get_contents('maps/map_' .
+                htmlspecialchars($_POST['id'])));
+            unlink('maps/map_' . htmlspecialchars($_POST['id']) . '_tmp');
+        }   
+
 	}
 	elseif ($_SERVER["REQUEST_METHOD"] == "GET")
 	{
@@ -83,8 +107,8 @@ else if ($_SERVER['REQUEST_METHOD'] == 'GET')
 				{
 					$map_list = array();
 				}
-				if
-				(array_key_exists('setup', $_GET) && htmlspecialchars($_GET['setup']) == 'yes')
+				if (array_key_exists('setup', $_GET) && 
+                    htmlspecialchars($_GET['setup']) == 'yes')
 				{
 					$map = new TI3Map(htmlspecialchars($_GET['name']), 
 						count($map_list), $setup=htmlspecialchars(
@@ -98,7 +122,10 @@ else if ($_SERVER['REQUEST_METHOD'] == 'GET')
                             $_GET['owner']));
 				}
 				
-				file_put_contents('maps/map_' . count($map_list), serialize($map));
+				file_put_contents('maps/map_' . count($map_list), 
+                                  serialize($map));
+				file_put_contents('maps/map_' . count($map_list) . '_tmp', 
+                                  serialize($map));
                 if ($_GET['owner'] === '')
                 {
                     $_GET['owner'] = 'Anonymous';
@@ -115,9 +142,18 @@ else if ($_SERVER['REQUEST_METHOD'] == 'GET')
 		}
 		elseif ($_GET['mode'] == 'load')
 		{
-			/*$input_ok = true;*/
-			$map = unserialize(file_get_contents('maps/map_' . 
-				htmlspecialchars($_GET['id'])));
+			if (file_exists('maps/map_' . htmlspecialchars($_GET['id']) 
+                            . '_tmp'))
+            {
+                $map = unserialize(file_get_contents('maps/map_' .
+                    htmlspecialchars($_GET['id']) . '_tmp'));
+
+            }
+            else 
+            {
+                $map = unserialize(file_get_contents('maps/map_' . 
+                    htmlspecialchars($_GET['id'])));
+            }
 			if (!array_key_exists('sid', $_GET))
 			{
 				$_GET['sid'] = false;
