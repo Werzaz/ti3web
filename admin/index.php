@@ -25,7 +25,7 @@
  */
 
 ini_set('display_errors', 'On');
-//error_reporting(E_ALL ^ E_NOTICE);
+$map_list = unserialize(file_get_contents('../map_list'));
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
@@ -42,13 +42,28 @@ ini_set('display_errors', 'On');
     <?php
     if ($_SERVER['REQUEST_METHOD'] == 'POST')
     {
-        echo var_dump($_POST);
+        /*echo var_dump($_POST);*/
+        foreach ($map_list as $k => $map)
+        {
+            $map_list[$k]['Name'] = htmlspecialchars($_POST['name_' . $k]);
+            $map_list[$k]['Owner'] = htmlspecialchars($_POST['owner_' . $k]);
+            if (array_key_exists('deleted_' . $k, $_POST))
+            {
+                $map_list[$k]['Deleted'] = true;
+            } 
+            else
+            {
+                $map_list[$k]['Deleted'] = false;
+            }
+        }
+        file_put_contents('../map_list', serialize($map_list));
     }
     ?>
-    <form action="ti3web_admin.php" method="post" id="admin"><table>
+    <form action="index.php" method="post" id="admin"><table>
+    <input type="submit" value="Submit">
     <tr><th>#</th><th>Name</th><th>Owner</th><th>Deleted</th></tr>
     <?php
-    $map_list = unserialize(file_get_contents('../map_list'));
+    /*$map_list = unserialize(file_get_contents('../map_list'));*/
     foreach ($map_list as $k => $map)
     {
         echo '<tr>';

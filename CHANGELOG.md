@@ -1,7 +1,11 @@
 # Changelog
 
 ### Version 0.1.1
-##### Revision 7 (2014-03-26)
+##### Revision 9 (2014-03-27)
+
+* Admin tool admin/index.php now working
+
+##### Revision 8 (2014-03-26)
 
 * Change are not saved automatically any longer. There are now button to save or discard changes.
 * Labels for systems are now supported. Currently this is only used for the setup help tiles. 
