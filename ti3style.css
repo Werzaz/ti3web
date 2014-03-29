@@ -23,6 +23,7 @@ body {
     color: #2f2f2f;
     border-radius: 0px 5px 5px 5px;
     padding: 5px;
+    margin: 0px 0px 5px 0px;
     clear:both;
 }
 
@@ -32,7 +33,11 @@ body {
     color: #2f2f2f;
     border-radius: 5px 5px 5px 5px;
     padding: 5px;
-    margin: auto;
+    position: relative;
+}
+
+.index {
+    margin: 5px auto;
 }
 
 #lock\_div {
@@ -112,4 +117,18 @@ a:hover {
 .system\_div {
     position: absolute;
     text-align: center;
+}
+
+#footer\_div {
+    width:300px;
+    background-color: #f2f2f2;
+    color: #2f2f2f;
+    border-radius: 5px 5px 5px 5px;
+    padding: 5px;
+    clear:both;
+    font-size: 0.7em;
+}
+
+.small\_text {
+    font-size: 0.7em;
 }

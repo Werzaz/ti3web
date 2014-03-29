@@ -23,7 +23,8 @@
  */
 
 ini_set('display_errors', 'On');
-include "ti3classes.php"; 
+include 'ti3classes.php';
+include 'ti3config.php'; 
 $deleted = false;
 
 $page_title = 'TI3Web Map Viewer';
@@ -90,8 +91,12 @@ else if ($_SERVER['REQUEST_METHOD'] == 'GET')
             $map = unserialize(file_get_contents('maps/map_' .
                 htmlspecialchars($_POST['id'])));
             unlink('maps/map_' . htmlspecialchars($_POST['id']) . '_tmp');
-        }   
-
+        }
+        else if ($lock_case == 0)
+        {
+            $map = unserialize(file_get_contents('maps/map_' .
+                htmlspecialchars($_POST['id'])));
+        }
 	}
 	elseif ($_SERVER["REQUEST_METHOD"] == "GET")
 	{
@@ -159,6 +164,11 @@ else if ($_SERVER['REQUEST_METHOD'] == 'GET')
 				$_GET['sid'] = false;
 			}
 			$lock_case = $map->check_lock(htmlspecialchars($_GET['sid']));
+            if ($lock_case == 0)
+            {
+                $map = unserialize(file_get_contents('maps/map_' .
+                    htmlspecialchars($_GET['id']))); 
+            }
 		}
 		elseif ($_GET['mode'] == 'delete')
 		{
@@ -208,7 +218,9 @@ else if ($_SERVER['REQUEST_METHOD'] == 'GET')
 					$map->show($size=50);
 				}    
 			?>
-	<!-- <?php echo var_dump($map->prev); ?> -->
+    <div id="footer_div">
+        <?php echo $footer_text; ?>
+    </div>
 </body>
 
 </html>

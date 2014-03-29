@@ -1209,8 +1209,8 @@ $setup_help = array(
 	)
 );
 
-file_put_contents('system_tiles', serialize($systems));
+/*file_put_contents('system_tiles', serialize($systems));
 file_put_contents('system_types', serialize($system_types));
 file_put_contents('tokens',       serialize($tokens));
 file_put_contents('token_types',  serialize($token_types));
-file_put_contents('setup_help',   serialize($setup_help));
+file_put_contents('setup_help',   serialize($setup_help));*/

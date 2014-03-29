@@ -26,17 +26,14 @@ if (!isset($ti3_path))
 	$ti3_path = '';
 }
 
-$systems      = unserialize(file_get_contents($ti3_path . 'system_tiles'));
+/*$systems      = unserialize(file_get_contents($ti3_path . 'system_tiles'));
 $system_types = unserialize(file_get_contents($ti3_path . 'system_types'));
 $tokens       = unserialize(file_get_contents($ti3_path . 'tokens'));
 $token_types  = unserialize(file_get_contents($ti3_path . 'token_types'));
-$setup_help   = unserialize(file_get_contents($ti3_path . 'setup_help'));
+$setup_help   = unserialize(file_get_contents($ti3_path . 'setup_help'));*/
 
-$lock_timeout = 300; /* Time to map lock time out in seconds. */
-
-$ti3web_url = 'http://ti3pbf.com/ti3web/';
-$ti3web_version = '0.1.1';
-$ti3web_admin = 'Sunchaser';
+include 'ti3constants.php';
+include 'ti3config.php'; 
 
 $default_prev = array(
 	'x' => 0,
@@ -74,6 +71,7 @@ class TI3Map
 		'rel_y' => 0,
 		'type' => 'Regular',
 		'tab' => 0,
+        'label_checked' => false,
 		/*'sid' => false;*/
 	);
 	private $system_list = array();
@@ -168,7 +166,16 @@ class TI3Map
 					  . 'margin:0;padding:0;width:20px;height:18px;" ></td>';
 			$output[] = '</tr>';
 			$output[] = '</table>';
-			
+            if ($this->prev['label_checked'] === false)
+            { 
+                $output[] = '<input id="label" type="checkbox" name="label" value="yes">';
+            }
+            else
+            {
+                $output[] = '<input id="label" type="checkbox" name="label" value="yes" checked>';
+            }
+            $output[] = 'Add coordinate label<br>';
+
 			$output[] = 'System type:<br>';
 			
 			$sorted_tiles = array();
@@ -195,16 +202,21 @@ class TI3Map
 			{
 				if ($type == $this->prev['type'])
 				{
-					$output[] = '<input type="radio" name="type" value="' 
+					$output[] = '<input type="radio" id="radio_' 
+                              . str_replace(' ', '_', $type)
+                              . '" name="type" value="' 
 							  . $type . '" checked>' . $desc;
 				}
 				else
 				{
-					$output[] = '<input type="radio" name="type" value="' 
-							  . $type . '">' . $desc;
+					$output[] = '<input type="radio" id="radio_' 
+                              . str_replace(' ', '_', $type)
+                              . '" name="type" value="' 
+							  . $type . '">' . $desc;               
 				}
 				$output[] = '<select name="type_' . str_replace(' ', '_', $type) 
-						  . '" form="change_map">';
+                          . '" form="change_map" onclick="this.form.radio_' 
+                          . str_replace(' ', '_', $type) . '.checked=true">';
 				$output   = array_merge($output, $sorted_tiles[$type]);
 				$output[] = '</select><br>';
 			}
@@ -212,6 +224,8 @@ class TI3Map
 			$output[] = '<input type="submit" value="Add system" name="add"><br><br>';
 
 			$output[] = 'Current systems:<br>';
+            $output[] = '<span class="small_text">(Double-click to get '
+                        . 'system coordinates.)</span>';
 			$output[] = '<select name="systems[]" form="change_map" multiple>';
 			foreach ($this->system_list as $loc => $system_obj)
 			{
@@ -323,16 +337,21 @@ class TI3Map
 			{
 				if ($type == $this->prev['type'])
 				{
-					$output[] = '<input type="radio" name="type" value="' 
+					$output[] = '<input type="radio" id="radio_' 
+                              . str_replace(' ', '_', $type)
+                              . '" name="type" value="' 
 							  . $type . '" checked>' . $desc;
 				}
 				else
 				{
-					$output[] = '<input type="radio" name="type" value="' 
+					$output[] = '<input type="radio" id="radio_' 
+                              . str_replace(' ', '_', $type)
+                              . '" name="type" value="' 
 							  . $type . '">' . $desc;               
 				}
 				$output[] = '<select name="type_' . str_replace(' ', '_', $type) 
-						  . '" form="change_map">';
+						  . '" form="change_map" onclick="this.form.radio_' 
+                          . str_replace(' ', '_', $type) . '.checked=true">';
 				$output   = array_merge($output, $sorted_tokens[$type]);
 				$output[] = '</select><br>';
 			}
@@ -340,6 +359,8 @@ class TI3Map
 			$output[] = '<input type="submit" value="Add token" name="add"><br><br>';
 	
 			$output[] = 'Current tokens:<br>';
+            $output[] = '<span class="small_text">(Double-click to get '
+                        .'token coordinates.)</span>';
 			$output[] = '<select name="tokens[]" form="change_map" multiple>';
 			foreach ($this->system_list as $loc => $system_obj)
 			{
@@ -462,16 +483,35 @@ class TI3Map
 		{
 			$this->file_id = htmlspecialchars($post['id']);
 		}
+
+        if (array_key_exists('label', $post))
+        {
+            $this->prev['label_checked'] = true;
+        }
+        else
+        {
+            $this->prev['label_checked'] = false;
+        }
+
 		if ($this->prev['tab'] == 0)
 		{
 			if (array_key_exists('add', $post))
 			{
+                if (array_key_exists('label', $post))
+                {
+                    $label = htmlspecialchars($post['x']) . ','
+                           . htmlspecialchars($post['y']);
+                }
+                else
+                {
+                    $label = false;
+                }
 				if (array_key_exists('type', $post))
 				{
 					$key = $post['type_' . str_replace(' ', '_', 
 						htmlspecialchars($post['type']))];
 					$this->add_system($key, htmlspecialchars($post['x']),
-						htmlspecialchars($post['y']));
+                                      htmlspecialchars($post['y']), $label=$label);
 				}
 			} 
 			elseif (array_key_exists('remove', $post))

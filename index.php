@@ -23,7 +23,8 @@
  */
 
 ini_set('display_errors', 'On');
-
+include 'ti3constants.php';
+include 'ti3config.php'; 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -37,7 +38,7 @@ ini_set('display_errors', 'On');
 </head>
 
 <body>
-    <div id="index_div">
+    <div id="index_div" class="index">
     <h2 style="text-align:center;">TI3Web Map Viewer</h2>
     <form action="mapview.php" method="get" id="map">
     Username:
@@ -45,7 +46,6 @@ ini_set('display_errors', 'On');
         <input id="mode_new" type="radio" name="mode" value="new" checked> 
         New map: <input type="text" name="name" onkeydown="this.form.mode_new.checked = true;"><br>
         <?php
-            $setup_help = unserialize(file_get_contents('setup_help'));
             echo '<input id="setup_help" type="checkbox" name="setup" value="yes"> ';
             echo 'Setup patterns: <select name="setup_id" form="map" onclick="this.form.setup_help.checked = true;">' 
                  . PHP_EOL;
@@ -62,14 +62,32 @@ ini_set('display_errors', 'On');
                      . 'onclick="this.form.mode_load.checked = true;">' 
                      . PHP_EOL;
                 $map_list = unserialize(file_get_contents('map_list'));
-                for ($k = 0; $k < count($map_list); $k++)
+                foreach ($map_list as $k => $map)
                 {
-                    /*echo '            ';*/
-                    if (!$map_list[$k]['Deleted'])
+                    if ($_SERVER['REQUEST_METHOD'] == 'POST')
                     {
-                        echo '<option value="' . $k . '">';
-                        echo $map_list[$k]['Name'];
-                        echo '</option>' . PHP_EOL;
+                        if ($_POST['user'] == 'All' && !$map['Deleted'])
+                        {
+                            echo '<option value="' . $k . '">';
+                            echo $map['Name'];
+                            echo '</option>' . PHP_EOL;
+                        }
+                        else if ($_POST['user'] == $map['Owner'] 
+                                 && !$map['Deleted'])
+                        {
+                            echo '<option value="' . $k . '">';
+                            echo $map['Name'];
+                            echo '</option>' . PHP_EOL;
+                        }
+                    }
+                    else
+                    {
+                        if (!$map['Deleted'])
+                        {
+                            echo '<option value="' . $k . '">';
+                            echo $map['Name'];
+                            echo '</option>' . PHP_EOL;
+                        }
                     }
                 }
                 echo '</select><br>' . PHP_EOL;
@@ -82,8 +100,62 @@ ini_set('display_errors', 'On');
             }
         ?><br>
         <input type="submit" value="Submit">
-        <!-- <input type="hidden" name="tab" value="0"> -->
+    </form>
+    <br>
+    <form action="index.php" method="post" id="filter">
+        <?php
+                $user_list = array();
+foreach ($map_list as $k => $map)
+{
+    if (!in_array($map['Owner'], $user_list))
+    {
+        $user_list[] = $map['Owner'];
+    }
+}
+sort($user_list);
+
+echo 'Filter maps by user: ' . PHP_EOL;
+echo '<select name="user" form="filter" onchange="this.form.submit();">'
+     . PHP_EOL;
+if ($_SERVER['REQUEST_METHOD'] == 'POST')
+{
+    if ($_POST['user'] == 'All')
+    {
+        echo '<option value="All" selected>All</option>' . PHP_EOL;
+    }
+    else
+    {
+        echo '<option value="All">All</option>' . PHP_EOL;
+    }
+    foreach ($user_list as $user)
+    {
+        if ($_POST['user'] == $user)
+        {
+            echo '<option value="' . $user . '" selected>' .$user 
+                 . '</option>' . PHP_EOL; 
+        }
+        else
+        {
+            echo '<option value="' . $user . '">' .$user . '</option>'
+                 . PHP_EOL;   
+        }
+    }
+}
+else
+{
+    echo '<option value="All" selected>All</option>' . PHP_EOL;
+    foreach ($user_list as $user)
+    {
+        echo '<option value="' . $user . '">' .$user . '</option>'
+             . PHP_EOL; 
+    }
+}
+echo '</select>';
+        ?>
     </form></div>
+    <div id="footer_div" class="index">
+        <?php echo $footer_text;?>
+    </div>
 </body>
 
 </html>
