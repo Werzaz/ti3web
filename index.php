@@ -104,53 +104,53 @@ include 'ti3config.php';
     <br>
     <form action="index.php" method="post" id="filter">
         <?php
-                $user_list = array();
-foreach ($map_list as $k => $map)
-{
-    if (!in_array($map['Owner'], $user_list))
-    {
-        $user_list[] = $map['Owner'];
-    }
-}
-sort($user_list);
-
-echo 'Filter maps by user: ' . PHP_EOL;
-echo '<select name="user" form="filter" onchange="this.form.submit();">'
-     . PHP_EOL;
-if ($_SERVER['REQUEST_METHOD'] == 'POST')
-{
-    if ($_POST['user'] == 'All')
-    {
-        echo '<option value="All" selected>All</option>' . PHP_EOL;
-    }
-    else
-    {
-        echo '<option value="All">All</option>' . PHP_EOL;
-    }
-    foreach ($user_list as $user)
-    {
-        if ($_POST['user'] == $user)
-        {
-            echo '<option value="' . $user . '" selected>' .$user 
-                 . '</option>' . PHP_EOL; 
-        }
-        else
-        {
-            echo '<option value="' . $user . '">' .$user . '</option>'
-                 . PHP_EOL;   
-        }
-    }
-}
-else
-{
-    echo '<option value="All" selected>All</option>' . PHP_EOL;
-    foreach ($user_list as $user)
-    {
-        echo '<option value="' . $user . '">' .$user . '</option>'
-             . PHP_EOL; 
-    }
-}
-echo '</select>';
+            $user_list = array();
+            foreach ($map_list as $k => $map)
+            {
+                if (!in_array($map['Owner'], $user_list))
+                {
+                    $user_list[] = $map['Owner'];
+                }
+            }
+            natcasesort($user_list);
+            
+            echo 'Filter maps by user: ' . PHP_EOL;
+            echo '<select name="user" form="filter" onchange="this.form.submit();">'
+                 . PHP_EOL;
+            if ($_SERVER['REQUEST_METHOD'] == 'POST')
+            {
+                if ($_POST['user'] == 'All')
+                {
+                    echo '<option value="All" selected>All</option>' . PHP_EOL;
+                }
+                else
+                {
+                    echo '<option value="All">All</option>' . PHP_EOL;
+                }
+                foreach ($user_list as $user)
+                {
+                    if ($_POST['user'] == $user)
+                    {
+                        echo '<option value="' . $user . '" selected>' .$user 
+                             . '</option>' . PHP_EOL; 
+                    }
+                    else
+                    {
+                        echo '<option value="' . $user . '">' .$user . '</option>'
+                             . PHP_EOL;   
+                    }
+                }
+            }
+            else
+            {
+                echo '<option value="All" selected>All</option>' . PHP_EOL;
+                foreach ($user_list as $user)
+                {
+                    echo '<option value="' . $user . '">' .$user . '</option>'
+                         . PHP_EOL; 
+                }
+            }
+            echo '</select>';
         ?>
     </form></div>
     <div id="footer_div" class="index">
