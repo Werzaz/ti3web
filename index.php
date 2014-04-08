@@ -23,7 +23,7 @@
  */
 
 ini_set('display_errors', 'On');
-include 'ti3constants.php';
+include 'include/ti3constants.php';
 include 'ti3config.php'; 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
@@ -31,7 +31,7 @@ include 'ti3config.php';
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 
 <head>
-	<link type="text/css" rel="stylesheet" href="ti3style.css"/>
+    <link type="text/css" rel="stylesheet" href="ti3style.css"/>
     <title>TI3Web Map Viewer</title>
     <meta http-equiv="content-type" content="text/html;charset=utf-8" />
     <meta name="generator" content="Geany 1.23.1" />

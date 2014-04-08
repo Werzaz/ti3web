@@ -24,16 +24,16 @@
 
 if ($_SERVER["REQUEST_METHOD"] == "GET")
 {
-		$ti3_path = '../ti3web/';
-		$num = htmlspecialchars($_GET['id']);
-		
+        $ti3_path = '../ti3web/';
+        $num = htmlspecialchars($_GET['id']);
+        
         echo '<link type="text/css" rel="Stylesheet" href="' 
              . $ti3_path . 'ti3style.css" />';
-		include($ti3_path . 'ti3classes.php');
-		$map = unserialize(file_get_contents($ti3_path . 'maps/map_' . $num));
-		$out = $map->show($size=50);
-		
-		return $out;
+        include($ti3_path . 'include/ti3classes.php');
+        $map = unserialize(file_get_contents($ti3_path . 'maps/map_' . $num));
+        $out = $map->show($size=50);
+        
+        return $out;
 }
 
 ?>

@@ -17,7 +17,7 @@
 
 ##### Revision 8 (2014-03-27)
 
-* Change are not saved automatically any longer. There are now button to save or discard changes.
+* Changes are not saved automatically any longer. There are now button to save or discard changes.
 * Labels for systems are now supported. Currently this is only used for the setup help tiles. 
 
 ##### Revision 6 (2014-03-23)
