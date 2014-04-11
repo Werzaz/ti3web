@@ -13,13 +13,21 @@
     <div id="lock_div">
       {LOCK_MSG}
       <form method="post" action="{TI3WEB_DIR}/mapview.php" id="lock">
-	<input type="hidden" value="{ID}" name="id">
-	<input type="hidden" value="{SID}" name="sid">
-	<!-- FOR LOCK_BUTTONS -->
-	<input type="submit" value="{BUTTON_VALUE}" name="{BUTTON_NAME}">
-	<!-- END FOR -->
+	<input type="hidden" value="{ID}" name="id"/>
+	<input type="hidden" value="{SID}" name="sid"/>
+	<!-- BEGIN lock_buttons -->
+	<input type="submit" value="{lock_buttons.VALUE}" name="{lock_buttons.NAME}"/>
+	<!-- END lock_buttons -->
       </form>
     </div>
+    <!-- IF S_EDITING -->
+    <!-- BEGIN tabs -->
+    <!-- IF tabs.ACTIVE --> <div id="tab_active">{tabs.NAME}</div> <!-- ELSE --> <div id="tab_inactive"> <a href={tabs.LINK}>{tabs.NAME</a></div> <!-- END IF --> 
+    <!-- END tabs -->
+    <div id="form_div">
+      
+    </div>
+    <!-- END IF -->
   </div>
   <div id="map_div">
     <!-- FOR SYSTEMS -->
