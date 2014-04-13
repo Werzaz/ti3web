@@ -12,6 +12,7 @@
   <div id="frame_div">
     <div id="lock_div">
       {LOCK_MSG}
+      <!-- IF T_LOCK_FORM -->
       <form method="post" action="{TI3WEB_DIR}/mapview.php" id="lock">
 	<input type="hidden" value="{ID}" name="id"/>
 	<input type="hidden" value="{SID}" name="sid"/>
@@ -19,15 +20,106 @@
 	<input type="submit" value="{lock_buttons.VALUE}" name="{lock_buttons.NAME}"/>
 	<!-- END lock_buttons -->
       </form>
+      <!-- ENDIF -->
     </div>
-    <!-- IF S_EDITING -->
+    <!-- IF T_EDITING -->
     <!-- BEGIN tabs -->
-    <!-- IF tabs.ACTIVE --> <div id="tab_active">{tabs.NAME}</div> <!-- ELSE --> <div id="tab_inactive"> <a href={tabs.LINK}>{tabs.NAME</a></div> <!-- END IF --> 
+    <!-- IF tabs.ACTIVE --> <div id="tab_active">{tabs.NAME}</div> <!-- ELSE --> <div id="tab_inactive"> <a href={tabs.LINK}>{tabs.NAME</a></div> <!-- ENDIF --> 
     <!-- END tabs -->
     <div id="form_div">
-      
+      <!-- IF T_FORM_TAB == 0 -->
+      <form method="post" action="{TI3WEB_DIR}/mapview.php" id="change_map">
+	<input type="hidden" name="id" value="{ID}"/>
+	<input type="hidden" name="sid" value="{SID}"/>
+	<input type="hidden" name="tab" value="0"/>
+	System location:<br/>
+	<table cellpadding="0" cellspacing="0" border="0">
+	  <tr>
+	    <td rowspan="2"> X: <input type="text" name="x" value="{X_VALUE}" class="value_field"/></td>
+	    <td><input type="button" value=" &#9650; " onclick="this.form.x.value++;" class="value_button"/></td>
+	    <td rowspan="2">   Y: <input type="text" name="y" value="{Y_VALUE}" class="value_field"/></td>
+	    <td><input type="button" value=" &#9650; " onclick="this.form.y.value++;" class="value_button"/></td>
+	  </tr>
+	  <tr>
+	    <td><input type=button value=" &#9660; " onclick="this.form.x.value--;" class="value_button"/></td>
+	    <td><input type=button value=" &#9660; " onclick="this.form.y.value--;" class="value_button"/></td>
+	  </tr>
+	</table>
+	<input id="label" type="checkbox" name="label" value="yes"/> Add coordinate label<br/>
+	System type:<br/>
+	<!-- BEGIN system_types -->
+	<input type="radio" id="radio_{system_types.VALUE_U}" name="type" value="{system_types.VALUE}"<!-- IF system_types.CHECKED --> checked<!-- ENDIF -->/>{system_types.VALUE}
+	<select name="type_{system_types.VALUE_U}" form="change_map" onclick="this.form.radio_{system_types.VALUE_U.checked=true">
+	  <!-- BEGIN system_types.options -->
+	  <option value="{system_types.options.KEY}">{system_types.options.NAME}</option>
+	  <!-- END system_types.options -->
+	</select><br/>
+	<!-- END system_types -->
+	<input type="submit" value="Add system" name="add"/><br/><br/>
+	Current systems:<br/>
+	<span class="small_text">(Double-click to get system coordinates.)</span>
+	<select name="systems[]" form="change_map" multiple>
+	  <!-- BEGIN system_list -->
+	  <option value="{system_list.VALUE}" ondblclick="this.form.x.value={system_list.X_VALUE};this.form.y.value={system_list.Y_VALUE};">{system_list.TEXT}</option>
+	  <!-- END system_list -->
+	</select><br/>
+	<input type="submit" value="Remove systems(s)" name="remove"/><br/>
+	<input type="submit" value="Swap systems" name="swap"/><br/>
+      </form>
+      <!-- ELSEIF T_FORM_TAB == 1 -->
+      <form method="post" action="{TI3WEB_DIR}/mapview.php" id="change_map">
+	<input type="hidden" name="id" value="{ID}"/>
+	<input type="hidden" name="sid" value="{SID}"/>
+	<input type="hidden" name="tab" value="1"/>
+	Token system:<br/>
+	<table cellpadding="0" cellspacing="0" border="0">
+	  <tr>
+	    <td rowspan="2"> X: <input type="text" name="x" value="{X_VALUE}" class="value_field"/></td>
+	    <td><input type="button" value=" &#9650; " onclick="this.form.x.value++;" class="value_button"/></td>
+	    <td rowspan="2">   Y: <input type="text" name="y" value="{Y_VALUE}" class="value_field"/></td>
+	    <td><input type="button" value=" &#9650; " onclick="this.form.y.value++;" class="value_button"/></td>
+	  </tr>
+	  <tr>
+	    <td><input type=button value=" &#9660; " onclick="this.form.x.value--;" class="value_button"/></td>
+	    <td><input type=button value=" &#9660; " onclick="this.form.y.value--;" class="value_button"/></td>
+	  </tr>
+	</table>
+	Relative location:<br/>
+	<table cellpadding="0" cellspacing="0" border="0">
+	  <tr>
+	    <td rowspan="2"> X: <input type="text" name="rel_x" value="{REL_X_VALUE}" class="value_field"/></td>
+	    <td><input type="button" value=" &#9650; " onclick="this.form.x.value++;" class="value_button"/></td>
+	    <td rowspan="2">   Y: <input type="text" name="rel_y" value="{REL_Y_VALUE}" class="value_field"/></td>
+	    <td><input type="button" value=" &#9650; " onclick="this.form.y.value++;" class="value_button"/></td>
+	  </tr>
+	  <tr>
+	    <td><input type=button value=" &#9660; " onclick="this.form.rel_x.value--;" class="value_button"/></td>
+	    <td><input type=button value=" &#9660; " onclick="this.form.rel_y.value--;" class="value_button"/></td>
+	  </tr>
+	</table>
+	Token type:<br/>
+	<!-- BEGIN token_types -->
+	<input type="radio" id="radio_{token_types.VALUE_U}" name="type" value="{token_types.VALUE}"<!-- IF token_types.CHECKED --> checked<!-- ENDIF -->/>{token_types.VALUE}
+	<select name="type_{token_types.VALUE_U}" form="change_map" onclick="this.form.radio_{token_types.VALUE_U}.checked=true">
+	  <!-- BEGIN token_types.options -->
+	  <option value="{token_types.options.KEY}">{token_types.options.NAME}</option>
+	  <!-- END token_types.options -->
+	</select><br/>
+	<!-- END token_types -->
+	<input type="submit" value="Add system" name="add"/><br/><br/>
+	Current tokens:<br/>
+	<span class="small_text">(Double-click to get token coordinates.)</span>
+	<select name="tokens[]" form="change_map" multiple>
+	  <!-- BEGIN token_list -->
+	  <option value="{token_list.VALUE}" ondblclick="this.form.x.value={token_list.X_VALUE};this.form.y.value={token_list.Y_VALUE};this.form.rel_x.value={token_list.REL_X_VALUE};this.form.rel_y.value={token_list.REL_Y_VALUE};">{token_list.TEXT}</option>
+	  <!-- END token_list -->
+	</select><br/>
+	<input type="submit" value="Remove token" name="remove"><br/>
+	<input type="submit" value="Move token" name="move"><br/>
+      </form>
+      <!-- ENDIF -->
     </div>
-    <!-- END IF -->
+    <!-- ENDIF -->
   </div>
   <div id="map_div">
     <!-- FOR SYSTEMS -->
