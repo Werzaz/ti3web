@@ -1,3 +1,24 @@
+<!-- IF 0 -->
+mapview.html
+
+Copyright 2014 Ulrich Feindt <sunchaser@ti3pbf.com>
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+MA 02110-1301, USA.
+<!-- ENDIF -->
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 	  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
@@ -22,6 +43,7 @@
       </form>
       <!-- ENDIF -->
     </div>
+    
     <!-- IF T_EDITING -->
     <!-- BEGIN tabs -->
     <!-- IF tabs.ACTIVE --> <div id="tab_active">{tabs.NAME}</div> <!-- ELSE --> <div id="tab_inactive"> <a href={tabs.LINK}>{tabs.NAME</a></div> <!-- ENDIF --> 
@@ -32,6 +54,7 @@
 	<input type="hidden" name="id" value="{ID}"/>
 	<input type="hidden" name="sid" value="{SID}"/>
 	<input type="hidden" name="tab" value="0"/>
+	
 	System location:<br/>
 	<table cellpadding="0" cellspacing="0" border="0">
 	  <tr>
@@ -45,7 +68,9 @@
 	    <td><input type=button value=" &#9660; " onclick="this.form.y.value--;" class="value_button"/></td>
 	  </tr>
 	</table>
+	
 	<input id="label" type="checkbox" name="label" value="yes"/> Add coordinate label<br/>
+	
 	System type:<br/>
 	<!-- BEGIN system_types -->
 	<input type="radio" id="radio_{system_types.VALUE_U}" name="type" value="{system_types.VALUE}"<!-- IF system_types.CHECKED --> checked<!-- ENDIF -->/>{system_types.VALUE}
@@ -55,14 +80,18 @@
 	  <!-- END system_types.options -->
 	</select><br/>
 	<!-- END system_types -->
+	
 	<input type="submit" value="Add system" name="add"/><br/><br/>
+	
 	Current systems:<br/>
 	<span class="small_text">(Double-click to get system coordinates.)</span>
+	
 	<select name="systems[]" form="change_map" multiple>
 	  <!-- BEGIN system_list -->
 	  <option value="{system_list.VALUE}" ondblclick="this.form.x.value={system_list.X_VALUE};this.form.y.value={system_list.Y_VALUE};">{system_list.TEXT}</option>
 	  <!-- END system_list -->
 	</select><br/>
+	
 	<input type="submit" value="Remove systems(s)" name="remove"/><br/>
 	<input type="submit" value="Swap systems" name="swap"/><br/>
       </form>
@@ -71,6 +100,7 @@
 	<input type="hidden" name="id" value="{ID}"/>
 	<input type="hidden" name="sid" value="{SID}"/>
 	<input type="hidden" name="tab" value="1"/>
+	
 	Token system:<br/>
 	<table cellpadding="0" cellspacing="0" border="0">
 	  <tr>
@@ -84,6 +114,7 @@
 	    <td><input type=button value=" &#9660; " onclick="this.form.y.value--;" class="value_button"/></td>
 	  </tr>
 	</table>
+	
 	Relative location:<br/>
 	<table cellpadding="0" cellspacing="0" border="0">
 	  <tr>
@@ -97,6 +128,7 @@
 	    <td><input type=button value=" &#9660; " onclick="this.form.rel_y.value--;" class="value_button"/></td>
 	  </tr>
 	</table>
+	
 	Token type:<br/>
 	<!-- BEGIN token_types -->
 	<input type="radio" id="radio_{token_types.VALUE_U}" name="type" value="{token_types.VALUE}"<!-- IF token_types.CHECKED --> checked<!-- ENDIF -->/>{token_types.VALUE}
@@ -106,26 +138,32 @@
 	  <!-- END token_types.options -->
 	</select><br/>
 	<!-- END token_types -->
+	
 	<input type="submit" value="Add system" name="add"/><br/><br/>
+	
 	Current tokens:<br/>
 	<span class="small_text">(Double-click to get token coordinates.)</span>
+	
 	<select name="tokens[]" form="change_map" multiple>
 	  <!-- BEGIN token_list -->
 	  <option value="{token_list.VALUE}" ondblclick="this.form.x.value={token_list.X_VALUE};this.form.y.value={token_list.Y_VALUE};this.form.rel_x.value={token_list.REL_X_VALUE};this.form.rel_y.value={token_list.REL_Y_VALUE};">{token_list.TEXT}</option>
 	  <!-- END token_list -->
 	</select><br/>
-	<input type="submit" value="Remove token" name="remove"><br/>
-	<input type="submit" value="Move token" name="move"><br/>
+	
+	<input type="submit" value="Remove token" name="remove"/><br/>
+	<input type="submit" value="Move token" name="move"/><br/>
       </form>
       <!-- ENDIF -->
     </div>
     <!-- ENDIF -->
   </div>
+  
   <div id="map_div">
     <!-- FOR SYSTEMS -->
     <div class="system_div" style="{SYSTEM_STYLE}" title="{SYSTEM_TITLE}"></div>
     <!-- END FOR -->
   </div>
+
   <div id="footer_div">
     {FOOTER_MSG}
   </div>

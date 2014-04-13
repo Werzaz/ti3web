@@ -1,0 +1,79 @@
+<!-- IF 0 -->
+[Insert filename]
+
+Copyright 2014 Ulrich Feindt <sunchaser@ti3pbf.com>
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+MA 02110-1301, USA.
+<!-- ENDIF -->
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+  <link type="text/css" rel="stylesheet" href="ti3style.css"/>
+  <title>TI3Web Map Viewer</title>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+</head>
+
+<body>
+  <div id="index_div" class="index">
+    <h2 style="text-align:center;">TI3Web Map Viewer</h2>
+    <form action="mapview.php" method="get" id="map">
+    
+      Username: 
+      <input type="text" name="owner"/><br/>
+      <input id="mode_new" type="radio" name="mode" value="new" checked/> 
+      
+      New map: 
+      <input type="text" name="name" onkeydown="this.form.mode_new.checked = true;"/><br/>
+      <input id="setup_help" type="checkbox" name="setup" value="yes"/> 
+    
+      Setup patterns: 
+      <select name="setup_id" form="map" onclick="this.form.setup_help.checked = true;">
+	<!-- BEGIN setup_list -->
+	<option value="{setup_list.KEY}">{setup_list.NAME}</option>
+	<!-- END setup_list  -->
+      </select><br/>
+    
+      Saved maps: 
+      <select name="id" form="map" onclick="this.form.mode_load.checked = true;">
+	<!-- BEGIN map_list -->
+	<option value="{map_list.KEY}">{map_list.NAME}</option>
+	<!-- END map_list -->
+      </select><br/>
+    
+      <input id="mode_load" type="radio" name="mode" value="load"/> Load map
+      <input id="mode_delete" type="radio" name="mode" value="delete"/> Delete map
+      <br/>
+
+      <input type="submit" value="Submit"/>
+    </form>
+    <br/>
+    <form>
+      Filter maps by user: 
+      <select name="user" form="filter" onchange="this.form.submit();">
+	<option value="All" selected>All</option>
+	<!-- BEGIN user_list -->
+	<option value="{user_list.NAME}" selected>{user_list.NAME}</option>
+	<!-- END user_list -->
+      </select>
+    </form>
+  </div>
+  <div id="footer_div" class="index">
+    {FOOTER_MSG}
+  </div>
+</body>
